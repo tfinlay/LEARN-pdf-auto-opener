@@ -12,14 +12,19 @@
   "content_scripts": [
     {
       "matches": ["*://*.learn.canterbury.ac.nz/*"],
-      "js": ["opener.js"]
+      "js": ["opener.ts"]
     }
   ],
-  
-  "browser_specific_settings": {
-      "gecko": {
-        "update_url": "https://tfinlay.github.io/WebExtensions/learn_pdf_helper/updates.json"
-      }
-    }
 
+  "background": {
+    "scripts": ["background.ts"]
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "update_url": "https://tfinlay.github.io/WebExtensions/learn_pdf_helper/updates.json"
+    }
+  },
+
+  "permissions": ["storage", "webRequest", "webRequestBlocking", "*://*.learn.canterbury.ac.nz/*"]
 }

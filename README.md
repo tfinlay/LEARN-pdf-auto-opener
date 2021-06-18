@@ -8,8 +8,8 @@ No more little boxes within boxes!
 
 ## Before
 
-![image showing pdf embedded in small box in page](https://raw.githubusercontent.com/tfinlay/LEARN-pdf-auto-opener/main/before_screenshot.png)
+![image showing pdf embedded in small box in page](https://raw.githubusercontent.com/tfinlay/LEARN-pdf-auto-opener/main/assets/before_screenshot.png)
 
 ## After
 
-![image showing pdf filling entire page](https://raw.githubusercontent.com/tfinlay/LEARN-pdf-auto-opener/main/after_screenshot.png)
+![image showing pdf filling entire page](https://raw.githubusercontent.com/tfinlay/LEARN-pdf-auto-opener/main/assets/after_screenshot.png)
