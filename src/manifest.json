@@ -20,8 +20,17 @@
     "scripts": ["background.ts"]
   },
 
+  "browser_action": {
+    "default_icon": {
+      "48": "icons/icon.png"
+    },
+    "default_title": "PDF Auto-Opener",
+    "default_popup": "popup.html"
+  },
+
   "browser_specific_settings": {
     "gecko": {
+      "id": "learn_pdf_auto_opener@tfinlay.github.io",
       "update_url": "https://tfinlay.github.io/WebExtensions/learn_pdf_helper/updates.json"
     }
   },

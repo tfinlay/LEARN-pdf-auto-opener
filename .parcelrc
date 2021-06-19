@@ -1,6 +1,7 @@
 {
     "extends": "@parcel/config-webextension",
     "transformers": {
-        "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
+        "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"],
+        "*.{scss,sass}": ["@parcel/transformer-sass"]
     }
 }

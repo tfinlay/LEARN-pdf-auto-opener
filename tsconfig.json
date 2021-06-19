@@ -6,6 +6,10 @@
     "target": "ES2015",
     "outDir": "lib",
     "declaration": false,
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "module": "ES6",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "useDefineForClassFields": true
   },
 }
