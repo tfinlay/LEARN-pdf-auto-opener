@@ -8,15 +8,19 @@ export class SettingsStore {
 
     expandEmbedded?: boolean
     openForcedDownloads?: boolean
+    analytics?: boolean
 
     expandEmbeddedLoadStatus: LoadStatus = new LoadStatusNotBegun()
     openForcedDownloadsLoadStatus: LoadStatus = new LoadStatusNotBegun()
+    analyticsLoadStatus: LoadStatus = new LoadStatusNotBegun()
+
 
     constructor() {
         makeAutoObservable(this)
 
         this.fetchExpandEmbedded()
         this.fetchOpenForcedDownloads()
+        this.fetchAnalytics()
     }
 
     resetHasMadeSettingsChanges() {
@@ -87,6 +91,40 @@ export class SettingsStore {
         } catch (e) {
             runInAction(() => {
                 this.openForcedDownloadsLoadStatus = new LoadStatusError(e)
+            })
+            throw e
+        }
+    }
+
+    async setAnalytics(value: boolean) {
+        await browser.storage.sync.set({
+            [SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS]: value
+        })
+        runInAction(() => {
+            this.hasMadeSettingsChanges = true
+            this.analytics = value
+            this.analyticsLoadStatus = new LoadStatusDone()
+        })
+    }
+
+    async fetchAnalytics() {
+        this.analytics = undefined
+        this.analyticsLoadStatus = new LoadStatusLoading()
+        try {
+            const res = await browser.storage.sync.get(SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS)
+            runInAction(() => {
+                if (SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS in res) {
+                    this.analytics = res[SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS]
+                    this.analyticsLoadStatus = new LoadStatusDone()
+                }
+                else {
+                    this.analyticsLoadStatus = new LoadStatusError("Key is not defined. Setting...");
+                    this.setAnalytics(true)
+                }
+            })
+        } catch (e) {
+            runInAction(() => {
+                this.analyticsLoadStatus = new LoadStatusError(e)
             })
             throw e
         }

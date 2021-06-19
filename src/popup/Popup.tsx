@@ -9,11 +9,26 @@ import {
     Typography,
     useMediaQuery
 } from "@material-ui/core";
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Settings} from "./Settings";
+import {Share} from "./Share";
+import {browser} from "webextension-polyfill-ts";
+import {LOCAL_KEYS} from "../constant";
 
 export const Popup: React.FC = () => {
     const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`)
+
+    const [workCount, setWorkCount] = useState<number | null>(null)
+
+    useEffect(() => {
+        (async () => {
+            const res = await browser.storage.local.get(LOCAL_KEYS.WORK_COUNT)
+            console.log(res)
+            setWorkCount(
+                res[LOCAL_KEYS.WORK_COUNT] ?? null
+            )
+        })()
+    }, [])
 
     const theme = React.useMemo(() => (
         createMuiTheme({
@@ -27,7 +42,19 @@ export const Popup: React.FC = () => {
         <MuiThemeProvider theme={theme}>
             <Paper style={{padding: 10}}>
                 <Box component="div">
-                    <Typography variant="h3">LEARN PDF Auto-Opener</Typography>
+                    <Typography variant="h4">LEARN PDF Auto-Opener</Typography>
+                </Box>
+
+                {(workCount === null) ? undefined : (
+                    <Box>
+                        <Typography variant="subtitle1">
+                            So far, we've opened {workCount} PDFs for you!
+                        </Typography>
+                    </Box>
+                )}
+
+                <Box component="div" style={{paddingTop: 10}}>
+                    <Share/>
                 </Box>
 
                 <Box component="div" style={{paddingTop: 10}}>
@@ -36,7 +63,7 @@ export const Popup: React.FC = () => {
 
                 <Box component="div" style={{paddingTop: 8}}>
                     <Typography variant="body2">
-                        Made with ❤ by <Link variant="inherit" color="inherit" href="https://github.com/tfinlay">Thomas Finlay</Link>
+                        Made with ❤ by <Link variant="inherit" color="inherit" href="https://github.com/tfinlay" target="_blank" rel="noopener noreferrer">Thomas Finlay</Link>
                     </Typography>
                 </Box>
             </Paper>
