@@ -27,13 +27,15 @@ export class SettingsStore {
         this.hasMadeSettingsChanges = false
     }
 
-    async setExpandEmbedded(value: boolean) {
+    async setExpandEmbedded(value: boolean, internal?: boolean) {
         await browser.storage.sync.set({
             [SYNC_KEYS.CONFIG_EXPAND_EMBEDDED]: value
         })
 
         runInAction(() => {
-            this.hasMadeSettingsChanges = true
+            if (!internal) {
+                this.hasMadeSettingsChanges = true
+            }
             this.expandEmbedded = value
             this.expandEmbeddedLoadStatus = new LoadStatusDone()
         })
@@ -51,7 +53,7 @@ export class SettingsStore {
                 }
                 else {
                     this.expandEmbeddedLoadStatus = new LoadStatusError("Key is not defined. Setting...");
-                    this.setExpandEmbedded(true)
+                    this.setExpandEmbedded(true, true)
                 }
             })
         } catch (e) {
@@ -62,12 +64,14 @@ export class SettingsStore {
         }
     }
 
-    async setOpenForcedDownloads(value: boolean) {
+    async setOpenForcedDownloads(value: boolean, internal?: boolean) {
         await browser.storage.sync.set({
             [SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS]: value
         })
         runInAction(() => {
-            this.hasMadeSettingsChanges = true
+            if (!internal) {
+                this.hasMadeSettingsChanges = true
+            }
             this.openForcedDownloads = value
             this.openForcedDownloadsLoadStatus = new LoadStatusDone()
         })
@@ -85,7 +89,7 @@ export class SettingsStore {
                 }
                 else {
                     this.openForcedDownloadsLoadStatus = new LoadStatusError("Key is not defined. Setting...");
-                    this.setOpenForcedDownloads(true)
+                    this.setOpenForcedDownloads(true, true)
                 }
             })
         } catch (e) {
@@ -96,12 +100,14 @@ export class SettingsStore {
         }
     }
 
-    async setAnalytics(value: boolean) {
+    async setAnalytics(value: boolean, internal?: boolean) {
         await browser.storage.sync.set({
             [SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS]: value
         })
         runInAction(() => {
-            this.hasMadeSettingsChanges = true
+            if (!internal) {
+                this.hasMadeSettingsChanges = true
+            }
             this.analytics = value
             this.analyticsLoadStatus = new LoadStatusDone()
         })
@@ -119,7 +125,7 @@ export class SettingsStore {
                 }
                 else {
                     this.analyticsLoadStatus = new LoadStatusError("Key is not defined. Setting...");
-                    this.setAnalytics(true)
+                    this.setAnalytics(true, true)
                 }
             })
         } catch (e) {
