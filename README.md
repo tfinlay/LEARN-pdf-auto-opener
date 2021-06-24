@@ -13,3 +13,14 @@ No more little boxes within boxes!
 ## After
 
 ![image showing pdf filling entire page](https://raw.githubusercontent.com/tfinlay/LEARN-pdf-auto-opener/main/assets/after_screenshot.png)
+
+## Build Instructions
+
+This project uses [yarn](https://yarnpkg.com/). To build, simply run:
+
+```bash
+$ yarn install
+$ yarn run build
+```
+
+to start a development server instead, run `yarn start` instead of `yarn run build`.
