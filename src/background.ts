@@ -1,6 +1,11 @@
 import {browser, WebRequest} from "webextension-polyfill-ts";
-import {ALLOWED_URL_PATTERNS, LOCAL_KEYS, SYNC_KEYS, WORK_NOTIFICATION_MESSAGE_ID} from "./constant";
+import {ALLOWED_URL_PATTERNS, ANALYTICS, LOCAL_KEYS, SYNC_KEYS, WORK_NOTIFICATION_MESSAGE_ID} from "./constant";
 import {getSyncSetting} from "./util";
+
+enum WorkType {
+    EXPAND,
+    AVOID_DOWNLOAD
+}
 
 class BackgroundWorkSaver {
     private helpNotificationBufferCount: number = 0
@@ -28,16 +33,46 @@ class BackgroundWorkSaver {
         }
     }
 
-    public registerWork(): void {
+    private static async pingAnalyticsIfNecessary(type?: WorkType) {
+        if (await getSyncSetting(SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS, true)) {
+            let typeString
+            switch (type) {
+                case WorkType.AVOID_DOWNLOAD:
+                    typeString = ANALYTICS.eventTypeSkipDownload
+                    break
+                case WorkType.EXPAND:
+                    typeString = ANALYTICS.eventTypeExpand
+                    break
+                default:
+                    typeString = "unknown"
+            }
+
+            const res = await fetch(`https://www.google-analytics.com/collect`, {
+                method: "POST",
+                credentials: "omit",
+                body: `v=1&tid=${ANALYTICS.trackingId}&cid=${ANALYTICS.clientId}&aip=1&ds=add-on&t=event&ec=${ANALYTICS.eventCategory}&ea=${typeString}`
+            })
+
+            if (res.ok) {
+                console.log("Successfully sent ping to analytics.")
+            }
+            else {
+                console.warn("Failed to send ping to analytics.")
+            }
+        }
+    }
+
+    public registerWork(type?: WorkType): void {
         console.log("Registering work...")
         this.helpNotificationBufferCount ++;
         this.saveIfNecessary()
+        BackgroundWorkSaver.pingAnalyticsIfNecessary(type)
     }
 
     constructor() {
         browser.runtime.onMessage.addListener((message, sender) => {
             if (message === WORK_NOTIFICATION_MESSAGE_ID) {
-                this.registerWork()
+                this.registerWork(WorkType.EXPAND)
             }
         })
     }
@@ -66,7 +101,7 @@ const onHeadersReceived = (requestDetails: WebRequest.OnHeadersReceivedDetailsTy
         if (dispositionHeader !== undefined && /attachment;/.test(headers[dispositionHeader].value)) {
             console.log(`Caught Content-Disposition: ${headers[dispositionHeader].value}`)
             headers.splice(dispositionHeader, 1)
-            workSaver.registerWork()
+            workSaver.registerWork(WorkType.AVOID_DOWNLOAD)
         }
         return {responseHeaders: headers}
     }

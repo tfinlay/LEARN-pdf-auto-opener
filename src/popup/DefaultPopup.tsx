@@ -15,7 +15,7 @@ import {Share} from "./Share";
 import {browser} from "webextension-polyfill-ts";
 import {LOCAL_KEYS} from "../constant";
 
-export const Popup: React.FC = () => {
+export const DefaultPopup: React.FC = () => {
     const prefersDarkMode = useMediaQuery(`(prefers-color-scheme: dark)`)
 
     const [workCount, setWorkCount] = useState<number | null>(null)

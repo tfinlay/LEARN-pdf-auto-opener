@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {Button, Card, CardContent, Snackbar, Typography} from "@material-ui/core";
-import {LOCAL_KEYS, SHARE_URL} from "../constant";
+import {Button, Card, CardContent, Link, Snackbar, Typography} from "@material-ui/core";
+import {FEEDBACK_URL, LOCAL_KEYS, SHARE_URL} from "../constant";
 import {browser} from "webextension-polyfill-ts";
 
 interface ShareState {
@@ -11,6 +11,9 @@ export const Share = () => {
         hasShared: false
     })
 
+    const onFeedbackClick = useCallback(() => {
+        window.open(FEEDBACK_URL, "_blank")
+    }, [])
 
     const onShareClick = useCallback(() => {
         navigator.clipboard.writeText(SHARE_URL)
@@ -32,11 +35,15 @@ export const Share = () => {
         <>
             <Card variant="outlined">
                 <CardContent>
-                    <Typography variant="h5">Share</Typography>
+                    <Typography variant="h5">Share & Feedback</Typography>
 
                     <Typography variant="body1">
                         Like this? Spread the word!
                         <Button onClick={onShareClick} variant="contained" color="primary" style={{marginLeft: 8, verticalAlign: "middle"}}>Copy download link</Button>
+                    </Typography>
+                    <Typography variant="body1" style={{paddingTop: 8}}>
+                        Got any feedback?
+                        <Link onClick={onFeedbackClick} color="secondary" style={{marginLeft: 8, verticalAlign: "middle", cursor: "pointer"}}>Let me know!</Link>
                     </Typography>
                 </CardContent>
             </Card>

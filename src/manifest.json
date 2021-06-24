@@ -37,5 +37,9 @@
     }
   },
 
-  "permissions": ["storage", "webRequest", "webRequestBlocking", "*://*.learn.canterbury.ac.nz/*"]
+  "permissions": [
+    "storage", "webRequest", "webRequestBlocking",
+    "*://*.learn.canterbury.ac.nz/*",
+    "https://www.google-analytics.com/collect"
+  ]
 }
