@@ -2,8 +2,12 @@ import { makeAutoObservable, runInAction } from 'mobx'
 import { SYNC_KEYS } from '../constant'
 import { LoadStatus, LoadStatusDone, LoadStatusError, LoadStatusLoading, LoadStatusNotBegun } from './LoadStatus'
 
+/**
+ * MobX store behind the settings UI. This handles reading and writing configuration changes.
+ * For added fun these reads and writes are asynchronous so each setting is paired with a LoadStatus to track this.
+ */
 export class SettingsStore {
-    hasMadeSettingsChanges: boolean = false
+    hasMadeSettingsChanges = false
 
     expandEmbedded?: boolean
     openForcedDownloads?: boolean

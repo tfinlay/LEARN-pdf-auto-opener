@@ -4,8 +4,7 @@ import {
   CardContent,
   Checkbox, Dialog, DialogContent, DialogTitle,
   FormControlLabel,
-  InputLabel, Link,
-  Paper,
+  Link,
   Snackbar,
   Typography
 } from '@material-ui/core'

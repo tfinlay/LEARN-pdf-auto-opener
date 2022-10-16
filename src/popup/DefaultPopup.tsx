@@ -63,6 +63,7 @@ export const DefaultPopup: React.FC = () => {
                 <Box component="div" style={{ paddingTop: 8 }}>
                     <Typography variant="body2">
                         Made with ❤ by <Link variant="inherit" color="inherit" href="https://github.com/tfinlay" target="_blank" rel="noopener noreferrer">Thomas Finlay</Link>
+                      &nbsp;| <Link variant="inherit" color="inherit" href="https://github.com/tfinlay/LEARN-pdf-auto-opener" target="_blank" rel="noopener noreferrer">Contributions welcome!</Link>
                     </Typography>
                 </Box>
             </Paper>

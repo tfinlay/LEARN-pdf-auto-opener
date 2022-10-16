@@ -1,3 +1,8 @@
+/**
+ * This file is executed as a background service worker. It has two jobs:
+ * 1. Synchronising configuration changes (updateDnrRule)
+ * 2. Analytics logging (everything related to BackgroundWorkSaver)
+ */
 import {
   ALLOWED_URL_PATTERNS,
   ANALYTICS,
@@ -136,6 +141,7 @@ const main = async () => {
 
   chrome.storage.onChanged.addListener((changes, namespace) => {
     if (Object.hasOwn(changes, SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS)) {
+      // The UI has enabled/disabled the "open forced downloads" option. We need to pass that setting through to DNR.
       void updateDnrRule()
     }
   })
