@@ -25,3 +25,5 @@ export const ANALYTICS = {
   eventTypeExpand: 'expand',
   eventTypeSkipDownload: 'forcedownload'
 }
+
+export const DNR_RULESET_ID = "learn_force_download"

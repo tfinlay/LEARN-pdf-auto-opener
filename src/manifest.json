@@ -46,13 +46,12 @@
   },
 
   "permissions": [
-    "storage", "declarativeNetRequestWithHostAccess"
-
-  ],
-  "host_permissions": [
-    "*://*.learn.canterbury.ac.nz/*"
+    "storage", "declarativeNetRequestWithHostAccess", "webRequest"
   ],
   "optional_host_permissions": [
     "https://www.google-analytics.com/collect"
+  ],
+  "host_permissions": [
+    "*://*.learn.canterbury.ac.nz/*"
   ]
 }

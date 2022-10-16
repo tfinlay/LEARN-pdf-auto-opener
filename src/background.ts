@@ -1,4 +1,11 @@
-import { ANALYTICS, LOCAL_KEYS, SYNC_KEYS, WORK_NOTIFICATION_MESSAGE_ID } from './constant'
+import {
+  ALLOWED_URL_PATTERNS,
+  ANALYTICS,
+  DNR_RULESET_ID,
+  LOCAL_KEYS,
+  SYNC_KEYS,
+  WORK_NOTIFICATION_MESSAGE_ID
+} from './constant'
 import { getSyncSetting } from './util'
 
 console.log('Starting...')
@@ -81,53 +88,55 @@ class BackgroundWorkSaver {
 
 const workSaver = new BackgroundWorkSaver()
 
-let shouldIntercept = false
-
-/* const onHeadersReceived = (requestDetails: WebRequest.OnHeadersReceivedDetailsType) => {
-    if (!shouldIntercept) {
-        return
-    }
-
-    console.log(`Intercepted request of type ${requestDetails.type} to ${requestDetails.url}`);
-    const headers: WebRequest.HttpHeadersItemType[] = requestDetails.responseHeaders ?? []
-    const contentType = headers.find(
-        (header) => header.name.toLowerCase() === 'content-type'
+// No convenient type (in chrome-types) is available for res, so any has to be used here unfortunately...
+const onHeadersReceived = async (res) => {
+  /* eslint-disable */
+  if (await getShouldBind()) {
+    const headers = res.responseHeaders ?? []
+    const contentTypeIndex = headers.findIndex(
+      (header) => header.name.toLowerCase() === 'content-disposition'
     )
 
-    if (contentType !== undefined && contentType.value.toLowerCase() === 'application/pdf') {
-        console.log("Intercepted PDF request...")
-        const dispositionHeader = headers.findIndex(
-            (header) => header.name.toLowerCase() === 'content-disposition'
-        )
-        if (dispositionHeader !== undefined && /attachment;/.test(headers[dispositionHeader].value)) {
-            console.log(`Caught Content-Disposition: ${headers[dispositionHeader].value}`)
-            headers.splice(dispositionHeader, 1)
-            workSaver.registerWork(WorkType.AVOID_DOWNLOAD)
-        }
-        return {responseHeaders: headers}
+    if (res.method === 'GET' && res.url.includes(".pdf") && contentTypeIndex !== -1 && headers[contentTypeIndex].value.includes("attachment;")) {
+      // With any luck, our DNR rule has just transformed this attachment into an inline. Let's count that as a win.
+      workSaver.registerWork(WorkType.AVOID_DOWNLOAD)
     }
-} */
+  }
+}
 
 const getShouldBind = async () => {
   return await getSyncSetting(SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS, true)
 }
 
-const main = async () => {
-  shouldIntercept = await getShouldBind()
+const updateDnrRule = async () => {
+  const shouldIntercept = await getShouldBind()
+  await chrome.declarativeNetRequest.updateEnabledRulesets({
+    disableRulesetIds: (shouldIntercept) ? [] : [DNR_RULESET_ID],
+    enableRulesetIds: (shouldIntercept) ? [DNR_RULESET_ID] : []
+  })
+}
 
-  /* browser.webRequest.onHeadersReceived.addListener(
-        onHeadersReceived,
-        {
-            urls: ALLOWED_URL_PATTERNS,
-            types: ["main_frame"]
-        },
-        ["blocking", "responseHeaders"]
-    )
-    console.log("Bound onHeadersReceived") */
+const main = async () => {
+  await updateDnrRule()
+
+  chrome.webRequest.onHeadersReceived.addListener(
+    (res) => {
+      void onHeadersReceived(res)
+
+      // Make ESLint happy by explicitly returning undefined here.
+      return undefined
+    },
+  {
+        urls: ALLOWED_URL_PATTERNS,
+        types: ["main_frame"]
+      },
+      ["responseHeaders"]
+  )
+  console.log("Bound onHeadersReceived")
 
   chrome.storage.onChanged.addListener((changes, namespace) => {
     if (Object.hasOwn(changes, SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS)) {
-      shouldIntercept = changes[SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS].newValue as boolean
+      void updateDnrRule()
     }
   })
 }
