@@ -2,7 +2,7 @@
   "description": "Automatically opens PDFs that are embedded in pages on the University of Canterbury's LEARN site.",
   "manifest_version": 3,
   "name": "LEARN PDF auto-opener",
-  "version": "1.2.1",
+  "version": "3.0.0",
   "homepage_url": "https://github.com/tfinlay",
   "icons": {
     "48": "icons/icon.png"
