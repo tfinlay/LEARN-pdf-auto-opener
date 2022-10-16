@@ -1,0 +1,17 @@
+[{
+  "id": 1,
+  "priority": 1,
+  "action": {
+    "type": "modifyHeaders",
+    "requestHeaders": [
+      {
+        "header": "Content-Disposition",
+        "operation": "remove"
+      }
+    ]
+  },
+  "condition": {
+    "requestMethods": ["get"],
+    "urlFilter": "*.pdf"
+  }
+}]

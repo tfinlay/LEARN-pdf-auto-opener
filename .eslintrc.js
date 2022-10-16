@@ -4,11 +4,12 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'standard'
+    'eslint:recommended',
+    'plugin:react/recommended'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    // project: './tsconfig.json',
     ecmaVersion: 12,
     sourceType: 'module'
   },
