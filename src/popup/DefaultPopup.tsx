@@ -1,8 +1,6 @@
 import './css/popup.scss'
 import {
-  Backdrop,
   Box,
-  Container,
   createMuiTheme, Link,
   MuiThemeProvider,
   Paper,
@@ -20,7 +18,7 @@ export const DefaultPopup: React.FC = () => {
   const [workCount, setWorkCount] = useState<number | null>(null)
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const res = await chrome.storage.local.get(LOCAL_KEYS.WORK_COUNT)
       console.log(res)
       setWorkCount(
@@ -49,7 +47,7 @@ export const DefaultPopup: React.FC = () => {
                   : (
                     <Box>
                         <Typography variant="subtitle1">
-                            So far, we've opened {workCount} PDFs for you!
+                            So far, {"we've"} opened {workCount} PDFs for you!
                         </Typography>
                     </Box>
                     )}

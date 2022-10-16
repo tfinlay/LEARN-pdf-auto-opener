@@ -9,11 +9,11 @@ enum WorkType {
 }
 
 class BackgroundWorkSaver {
-    private helpNotificationBufferCount: number = 0
+    private helpNotificationBufferCount = 0
     private saveInFlight = false
 
     private static async saveWork (helpCount: number): Promise<void> {
-      const currentWorkCount = (await chrome.storage.local.get(LOCAL_KEYS.WORK_COUNT))[LOCAL_KEYS.WORK_COUNT]
+      const currentWorkCount = (await chrome.storage.local.get(LOCAL_KEYS.WORK_COUNT))[LOCAL_KEYS.WORK_COUNT] as number | null | undefined
       const newWorkCount = (currentWorkCount ?? 0) + helpCount
 
       await chrome.storage.local.set({
@@ -26,7 +26,7 @@ class BackgroundWorkSaver {
     private saveIfNecessary (): void {
       if (!this.saveInFlight && this.helpNotificationBufferCount !== 0) {
         this.saveInFlight = true
-        BackgroundWorkSaver.saveWork(this.helpNotificationBufferCount).then(r => {
+        void BackgroundWorkSaver.saveWork(this.helpNotificationBufferCount).then(_ => {
           this.saveInFlight = false
           this.saveIfNecessary()
         })
@@ -36,7 +36,7 @@ class BackgroundWorkSaver {
 
     private static async pingAnalyticsIfNecessary (type?: WorkType) {
       if (await getSyncSetting(SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS, true)) {
-        let typeString
+        let typeString: string
         switch (type) {
           case WorkType.AVOID_DOWNLOAD:
             typeString = ANALYTICS.eventTypeSkipDownload
@@ -66,14 +66,13 @@ class BackgroundWorkSaver {
       console.log('Registering work...')
       this.helpNotificationBufferCount++
       this.saveIfNecessary()
-      BackgroundWorkSaver.pingAnalyticsIfNecessary(type)
+      void BackgroundWorkSaver.pingAnalyticsIfNecessary(type)
     }
 
     constructor () {
       chrome.runtime.onMessage.addListener((message, sender) => {
         if (message === WORK_NOTIFICATION_MESSAGE_ID) {
           this.registerWork(WorkType.EXPAND)
-          return Promise.resolve()
         }
         return false
       })
@@ -127,10 +126,10 @@ const main = async () => {
     console.log("Bound onHeadersReceived") */
 
   chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (changes.hasOwnProperty(SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS)) {
-      shouldIntercept = changes[SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS].newValue
+    if (Object.hasOwn(changes, SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS)) {
+      shouldIntercept = changes[SYNC_KEYS.CONFIG_OPEN_FORCED_DOWNLOADS].newValue as boolean
     }
   })
 }
 
-main()
+void main()
