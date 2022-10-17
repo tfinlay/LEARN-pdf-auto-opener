@@ -20,7 +20,7 @@ This project uses [yarn](https://yarnpkg.com/). To build, simply run:
 
 ```bash
 $ yarn install
-$ yarn run build
+$ yarn build:prod
 ```
 
-to start a development server instead, run `yarn start` instead of `yarn run build`.
+to make a development build run instead of `yarn build:dev`.
