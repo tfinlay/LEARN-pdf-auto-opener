@@ -23,4 +23,4 @@ $ yarn install
 $ yarn build:prod
 ```
 
-to make a development build run instead of `yarn build:dev`.
+to make a development build run `yarn build:dev`.
