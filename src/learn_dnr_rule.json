@@ -1,0 +1,19 @@
+[{
+  "id": 1,
+  "priority": 2,
+  "action": {
+    "type": "modifyHeaders",
+    "responseHeaders": [
+      {
+        "header": "Content-Disposition",
+        "operation": "set",
+        "value": "inline"
+      }
+    ]
+  },
+  "condition": {
+    "requestMethods": ["get"],
+    "urlFilter": "*.pdf*",
+    "resourceTypes": ["main_frame"]
+  }
+}]

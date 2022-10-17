@@ -4,11 +4,12 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'standard'
+    'eslint:recommended',
+    'plugin:react/recommended'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    // project: './tsconfig.json',
     ecmaVersion: 12,
     sourceType: 'module'
   },
@@ -16,5 +17,17 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-  }
+  },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      extends: [
+        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking'
+      ],
+      parserOptions: {
+        project: ['./tsconfig.json']
+      }
+    }
+  ]
 }

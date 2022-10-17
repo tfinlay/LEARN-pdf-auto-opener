@@ -10,6 +10,7 @@
     "module": "ES6",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "types": ["chrome-types"]
   },
 }
