@@ -4,7 +4,7 @@ A handy little WebExtension that automatically opens embedded PDF files in full 
 
 No more little boxes within boxes!
 
-[Download Now](https://tfinlay.page.link/learn_pdf)
+[Download Now](https://www.tfinlay.io/projects/learn_pdf/)
 
 ## Before
 
