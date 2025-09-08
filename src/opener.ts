@@ -7,12 +7,11 @@ import { SYNC_KEYS, WORK_NOTIFICATION_MESSAGE_ID } from './constant'
     return
   }
 
-  console.log('LEARN PDF auto opener injected!')
-  const pageObjects = document.getElementsByTagName('object')
-  for (const obj of pageObjects) {
-    if (obj.type === 'application/pdf' && obj.data.startsWith('http')) {
-      await chrome.runtime.sendMessage(WORK_NOTIFICATION_MESSAGE_ID)
-      window.location.replace(obj.data)
-    }
+  console.log('LEARN PDF auto opener injected!');
+  const iframe = document.querySelector('iframe#resourceobject');
+  if (iframe && iframe.src.startsWith('http')) {
+      await chrome.runtime.sendMessage(WORK_NOTIFICATION_MESSAGE_ID);
+      window.location.replace(iframe.src);
   }
 })()
+
