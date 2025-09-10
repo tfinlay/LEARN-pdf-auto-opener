@@ -24,3 +24,5 @@ $ yarn build:prod
 ```
 
 to make a development build run `yarn build:dev`.
+
+It was last built with yarn `v1.22.22` and node.js `v22.19.0`
