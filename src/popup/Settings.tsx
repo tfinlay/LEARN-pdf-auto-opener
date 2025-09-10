@@ -2,9 +2,8 @@ import React, { useCallback, useState } from 'react'
 import {
   Card,
   CardContent,
-  Checkbox, Dialog, DialogContent, DialogTitle,
+  Checkbox,
   FormControlLabel,
-  Link,
   Snackbar,
   Typography
 } from '@material-ui/core'
@@ -14,7 +13,6 @@ import { SettingsStore } from './SettingsStore'
 
 export const Settings = observer(() => {
   const store = useLocalObservable<SettingsStore>(() => new SettingsStore())
-  const [showingAnalyticsDetails, setAnalyticsDetailShowing] = useState<boolean>(false)
 
   const setEmbeddedCallback = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
     await store.setExpandEmbedded(event.target.checked)
@@ -24,21 +22,9 @@ export const Settings = observer(() => {
     await store.setOpenForcedDownloads(event.target.checked)
   }, [store])
 
-  const setShowingAnalytics = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    await store.setAnalytics(event.target.checked)
-  }, [store])
-
   const handleSnackbarClose = useCallback((event: React.SyntheticEvent | React.MouseEvent, reason?: string) => {
     store.resetHasMadeSettingsChanges()
   }, [store])
-
-  const handleAnalyticsDetailsClose = useCallback(async (event: React.SyntheticEvent | React.MouseEvent, reason?: string) => {
-    setAnalyticsDetailShowing(false)
-  }, [setAnalyticsDetailShowing])
-
-  const handleAnalyticsDetailsOpen = useCallback((event: React.MouseEvent) => {
-    setAnalyticsDetailShowing(true)
-  }, [setAnalyticsDetailShowing])
 
   return (
         <>
@@ -47,12 +33,7 @@ export const Settings = observer(() => {
                     <Typography variant="h5">Settings</Typography>
                     <SettingsRow title="Expand embedded PDFs" onChange={setEmbeddedCallback} value={store.expandEmbedded}/>
                     <SettingsRow title="Open PDFs instead of downloading" onChange={setOpenForcedDownloads} value={store.openForcedDownloads}/>
-                    <SettingsRow
-                        title={'Allow analytics reporting'}
-                        onChange={setShowingAnalytics}
-                        value={store.analytics}
-                    />
-                    <div style={{ marginLeft: 30 }}><Link color="secondary" style={{ cursor: 'pointer' }} onClick={handleAnalyticsDetailsOpen}>Analytics Details & Privacy Policy</Link></div>
+                    <Typography variant="body2">The analytics setting has been removed as analytics are no longer collected.</Typography>
                 </CardContent>
             </Card>
 
@@ -70,30 +51,6 @@ export const Settings = observer(() => {
                     </Typography>
                 }
             />
-
-            <Dialog
-                open={showingAnalyticsDetails}
-                onClose={handleAnalyticsDetailsClose}
-            >
-                <DialogTitle>Analytics Reporting Information</DialogTitle>
-                <DialogContent>
-                    <Typography variant="body1">
-                        <p>Anonymous analytics logging events are triggered whenever this extension helps you open a PDF.</p>
-                        <p>
-                            No information about you or the PDF are recorded beyond perhaps your IP address, system information,
-                            the time at which the request was made, and how the extension helped you (for example, whether it expanded an
-                            embedded PDF or opened a PDF instead of downloading it).
-                        </p>
-
-                        <p>
-                            Information collected is for analytics purposes only. You may opt out at any time,
-                            however pre-recorded data will remain (since it cannot be linked to you to be deleted).
-                        </p>
-
-                        <p>Analytics are provided by Google Analytics.</p>
-                    </Typography>
-                </DialogContent>
-            </Dialog>
         </>
   )
 })
