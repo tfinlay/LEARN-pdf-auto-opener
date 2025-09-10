@@ -32,7 +32,10 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{f5023a98-32bf-4840-ae57-3273f6092289}",
-      "update_url": "https://tfinlay.github.io/WebExtensions/learn_pdf_helper/updates.json"
+      "update_url": "https://tfinlay.github.io/WebExtensions/learn_pdf_helper/updates.json",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
 
