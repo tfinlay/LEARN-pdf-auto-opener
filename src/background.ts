@@ -5,7 +5,6 @@
  */
 import {
   ALLOWED_URL_PATTERNS,
-  ANALYTICS,
   DNR_RULESET_ID,
   LOCAL_KEYS,
   SYNC_KEYS,
@@ -46,39 +45,10 @@ class BackgroundWorkSaver {
       }
     }
 
-    private static async pingAnalyticsIfNecessary (type?: WorkType) {
-      if (await getSyncSetting(SYNC_KEYS.CONFIG_ANONYMOUS_ANALYTICS, true)) {
-        let typeString: string
-        switch (type) {
-          case WorkType.AVOID_DOWNLOAD:
-            typeString = ANALYTICS.eventTypeSkipDownload
-            break
-          case WorkType.EXPAND:
-            typeString = ANALYTICS.eventTypeExpand
-            break
-          default:
-            typeString = 'unknown'
-        }
-
-        const res = await fetch('https://www.google-analytics.com/collect', {
-          method: 'POST',
-          credentials: 'omit',
-          body: `v=1&tid=${ANALYTICS.trackingId}&cid=${ANALYTICS.clientId}&aip=1&ds=add-on&t=event&ec=${ANALYTICS.eventCategory}&ea=${typeString}`
-        })
-
-        if (res.ok) {
-          console.log('Successfully sent ping to analytics.')
-        } else {
-          console.warn('Failed to send ping to analytics.')
-        }
-      }
-    }
-
     public registerWork (type?: WorkType): void {
       console.log('Registering work...')
       this.helpNotificationBufferCount++
       this.saveIfNecessary()
-      void BackgroundWorkSaver.pingAnalyticsIfNecessary(type)
     }
 
     constructor () {

@@ -2,7 +2,7 @@
   "description": "Automatically opens PDFs that are embedded in pages on the University of Canterbury's LEARN site.",
   "manifest_version": 3,
   "name": "LEARN PDF auto-opener",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "homepage_url": "https://github.com/tfinlay",
   "icons": {
     "48": "icons/icon.png"
@@ -17,7 +17,8 @@
 
   "background": {
     "service_worker": "background.ts",
-    "type": "module"
+    "type": "module",
+    "scripts": ["background.ts"]
   },
 
   "action": {
@@ -48,9 +49,7 @@
   "permissions": [
     "storage", "declarativeNetRequestWithHostAccess", "webRequest"
   ],
-  "optional_host_permissions": [
-    "https://www.google-analytics.com/collect"
-  ],
+  "optional_host_permissions": [],
   "host_permissions": [
     "*://*.learn.canterbury.ac.nz/*"
   ]

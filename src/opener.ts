@@ -8,7 +8,7 @@ import { SYNC_KEYS, WORK_NOTIFICATION_MESSAGE_ID } from './constant'
   }
 
   console.log('LEARN PDF auto opener injected!');
-  const iframe = document.querySelector('.resourcepdf > iframe#resourceobject');
+  const iframe = document.querySelector<HTMLIFrameElement>('.resourcepdf > iframe#resourceobject');
   if (iframe && iframe.src.startsWith('http')) {
       await chrome.runtime.sendMessage(WORK_NOTIFICATION_MESSAGE_ID);
       window.location.replace(iframe.src);
